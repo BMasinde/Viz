@@ -11,3 +11,12 @@ fontsize: 11pt
 ---
 
 ### Assignment 1. Perception Visualization
+
+```{r data}
+olive <- read.csv("olive.csv", sep = ",", header = TRUE)
+```
+
+```{r libraries}
+library(ggplot2)
+```
+

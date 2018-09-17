@@ -31,6 +31,7 @@ oleic_vs_eicosenoic <- ggplot(olive, aes(x=oleic, y = eicosenoic, color = as.fac
 
 oleic_vs_eicosenoic
 
+#question 4
 olive$linoleic2 <- cut_interval(olive$linoleic, n=3)
 olive$palmitic2 <- cut_interval(olive$palmitic, n=3)
 olive$palmitoleic2 <- cut_interval(olive$palmitoleic, n=3)
@@ -40,9 +41,12 @@ oleic_vs_eicosenoic1 <- ggplot(olive, aes(x=oleic, y=eicosenoic)) +
   geom_point(aes(color=linoleic2, size=palmitoleic2, shape=palmitic2))
 oleic_vs_eicosenoic1
 
+#question 5
 oleic_vs_eicosenoic2 <- ggplot(olive, aes(x=oleic, y=eicosenoic)) + 
   geom_point(aes(color=Region, size=palmitoleic2, shape=palmitic2))
 oleic_vs_eicosenoic2
+
+#question 6
 
 
 

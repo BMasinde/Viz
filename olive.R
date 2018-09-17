@@ -1,5 +1,6 @@
 #Olive
 library("ggplot2")
+library(plotly)
 olive <- read.csv("olive.csv")
 
 View(olive)
@@ -31,6 +32,7 @@ oleic_vs_eicosenoic <- ggplot(olive, aes(x=oleic, y = eicosenoic, color = as.fac
 
 oleic_vs_eicosenoic
 
+#question 4
 olive$linoleic2 <- cut_interval(olive$linoleic, n=3)
 olive$palmitic2 <- cut_interval(olive$palmitic, n=3)
 olive$palmitoleic2 <- cut_interval(olive$palmitoleic, n=3)
@@ -40,11 +42,24 @@ oleic_vs_eicosenoic1 <- ggplot(olive, aes(x=oleic, y=eicosenoic)) +
   geom_point(aes(color=linoleic2, size=palmitoleic2, shape=palmitic2))
 oleic_vs_eicosenoic1
 
+#question 5
 oleic_vs_eicosenoic2 <- ggplot(olive, aes(x=oleic, y=eicosenoic)) + 
   geom_point(aes(color=Region, size=palmitoleic2, shape=palmitic2))
 oleic_vs_eicosenoic2
 
+#question 6 plotly
+plot_ly(data = olive, x=Area, type = 'pie') %>%
+  layout(title = 'Proportion of Oils from different regions')
 
+p <- plot_ly(data, labels = ~Categorie, values = ~X1960, type = 'pie') %>%
+  layout(title = 'United States Personal Expenditures by Categories in 1960',
+         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+
+# Create a shareable link to your chart
+# Set up API credentials: https://plot.ly/r/getting-started
+chart_link = api_create(p, filename="pie-basic")
+chart_link
 
 
 

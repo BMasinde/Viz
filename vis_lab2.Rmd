@@ -33,14 +33,44 @@ olive$linolenic2 <- cut_interval(olive$linolenic, n=4)
 ```
 
 
-```{r}
+```{r question1_b}
 p_vs_o2 <- ggplot(olive, aes(x=oleic, y=palmitic, color = linolenic2)) + 
   geom_point()
 
 p_vs_o2
 ```
 
-```{r}
+```{r question 2, warning=FALSE}
+p_vs_o3 <- ggplot(olive, aes(palmitic, oleic)) +
+  geom_point(aes(color=linolenic2, size=linolenic2)) +
+  geom_spoke(aes(angle=as.numeric(linolenic2),radius=as.numeric(linolenic2)))
 
+p_vs_o3
+```
+
+```{r Question3}
+o_vs_e <- ggplot(olive, aes(x=oleic, y=eicosenoic, color = Region)) + 
+  geom_point()
+o_vs_e
+```
+
+
+```{r discretization}
+olive$linoleic2 <- cut_interval(olive$linoleic, n=3)
+olive$palmitic2 <- cut_interval(olive$palmitic, n=3)
+olive$palmitoleic2 <- cut_interval(olive$palmitoleic, n=3)
+```
+
+```{r question4, warning=FALSE}
+o_vs_e1 <- ggplot(olive, aes(x=oleic, y=eicosenoic)) + 
+  geom_point(aes(color=linoleic2, size=palmitoleic2, shape=palmitic2))
+o_vs_e1
+```
+
+```{r question5, warning=FALSE}
+o_vs_e2 <- ggplot(olive, aes(x=oleic, y=eicosenoic)) + 
+  geom_point(aes(color=Region, size=palmitoleic2, shape=palmitic2))
+
+o_vs_e2
 ```
 

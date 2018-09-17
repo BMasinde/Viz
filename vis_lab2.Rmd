@@ -20,3 +20,23 @@ olive <- read.csv("olive.csv", sep = ",", header = TRUE)
 library(ggplot2)
 ```
 
+```{r question1_a}
+p_vs_o <- ggplot(olive, aes(x=oleic, y=palmitic,
+                     color = linolenic)) +
+  geom_point() 
+  #xlab("")
+p_vs_o
+```
+
+```{r cut_interval}
+olive$linolenic2 <- cut_interval(olive$linolenic, n=4)
+```
+
+
+```{r}
+p_vs_o2 <- ggplot(olive, aes(x=olive$oleic, y=olive$palmitic, color = olive$linolenic2)) + 
+  geom_point()
+
+p_vs_o2
+```
+

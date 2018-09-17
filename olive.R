@@ -48,13 +48,12 @@ oleic_vs_eicosenoic2 <- ggplot(olive, aes(x=oleic, y=eicosenoic)) +
 oleic_vs_eicosenoic2
 
 #question 6 plotly
-plot_ly(data = olive, x=Area, type = 'pie') %>%
-  layout(title = 'Proportion of Oils from different regions')
+plot_ly(data = olive, labels=~Area, type = 'pie', showlegend = F) %>%
+  layout(title = 'Proportion of Oils from different regions',
+         xaxis = list(showgrid = F, zeroline = F, showticklables = F),
+         yaxis = list(showgrid = F, zeroline = F, showticklables = F))
+ 
 
-p <- plot_ly(data, labels = ~Categorie, values = ~X1960, type = 'pie') %>%
-  layout(title = 'United States Personal Expenditures by Categories in 1960',
-         xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
-         yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
 
 # Create a shareable link to your chart
 # Set up API credentials: https://plot.ly/r/getting-started

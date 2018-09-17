@@ -40,3 +40,4 @@ p_vs_o2 <- ggplot(olive, aes(x=olive$oleic, y=olive$palmitic, color = olive$lino
 p_vs_o2
 ```
 
+Some comment 

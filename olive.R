@@ -1,6 +1,6 @@
 #Olive
 library("ggplot2")
-library(plotly)
+library("plotly")
 olive <- read.csv("olive.csv")
 
 View(olive)
@@ -51,14 +51,20 @@ oleic_vs_eicosenoic2
 plot_ly(data = olive, labels=~Area, type = 'pie', showlegend = F) %>%
   layout(title = 'Proportion of Oils from different regions',
         xaxis = list(showgrid = F, zeroline = F, showticklables = F),
-         yaxis = list(showgrid = F, zeroline = F, showticklables = F))
+        yaxis = list(showgrid = F, zeroline = F, showticklables = F))
  
 
 
 # Create a shareable link to your chart
 # Set up API credentials: https://plot.ly/r/getting-started
-chart_link = api_create(p, filename="pie-basic")
-chart_link
+#chart_link = api_create(p, filename="pie-basic")
+#chart_link
 
 
+#question 7
+m <- ggplot(olive, aes(x = linoleic, y = eicosenoic)) +
+  geom_point()
+m
+m + geom_density_2d()
 
+m + stat_density_2d(aes(fill = stat(level)), geom = "polygon")

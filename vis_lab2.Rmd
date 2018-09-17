@@ -34,10 +34,13 @@ olive$linolenic2 <- cut_interval(olive$linolenic, n=4)
 
 
 ```{r}
-p_vs_o2 <- ggplot(olive, aes(x=olive$oleic, y=olive$palmitic, color = olive$linolenic2)) + 
+p_vs_o2 <- ggplot(olive, aes(x=oleic, y=palmitic, color = linolenic2)) + 
   geom_point()
 
 p_vs_o2
 ```
 
-Some comment 
+```{r}
+
+```
+

@@ -55,6 +55,13 @@ o_vs_e <- ggplot(olive, aes(x=oleic, y=eicosenoic, color = Region)) +
 o_vs_e
 ```
 
+```{r question3_b}
+o_vs_e0 <- ggplot(olive, aes(x=oleic, y = eicosenoic, color = as.factor(Region)))+
+  geom_point()
+
+o_vs_e0
+```
+
 
 ```{r discretization}
 olive$linoleic2 <- cut_interval(olive$linoleic, n=3)
@@ -81,5 +88,15 @@ plot_ly(data = olive, labels=~Area, type = 'pie', showlegend = F) %>%
         xaxis = list(showgrid = F, zeroline = F, showticklables = F),
          yaxis = list(showgrid = F, zeroline = F, showticklables = F))
 
+```
+
+```{r question7}
+
+```
+
+### Assignment 2: Multidimensional Scaling of a high-dimensional object
+
+```{r}
+baseball <- read.csv("baseball-2016.csv", sep = ",", header = TRUE)
 ```
 

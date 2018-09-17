@@ -50,7 +50,7 @@ oleic_vs_eicosenoic2
 #question 6 plotly
 plot_ly(data = olive, labels=~Area, type = 'pie', showlegend = F) %>%
   layout(title = 'Proportion of Oils from different regions',
-         xaxis = list(showgrid = F, zeroline = F, showticklables = F),
+        xaxis = list(showgrid = F, zeroline = F, showticklables = F),
          yaxis = list(showgrid = F, zeroline = F, showticklables = F))
  
 

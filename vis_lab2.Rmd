@@ -3,10 +3,10 @@ title: "Visualization Lab 2"
 author: "Roshni Sundaramurthy (rossu809); Brian Masinde (brima748)"
 date: "17 September 2018"
 output:
-  html_document:
-    df_print: paged
   html_notebook:
     theme: journal
+  html_document:
+    df_print: paged
 fontsize: 11pt
 ---
 
@@ -18,6 +18,7 @@ olive <- read.csv("olive.csv", sep = ",", header = TRUE)
 
 ```{r libraries}
 library(ggplot2)
+library(plotly)
 ```
 
 ```{r question1_a}
@@ -54,6 +55,13 @@ o_vs_e <- ggplot(olive, aes(x=oleic, y=eicosenoic, color = Region)) +
 o_vs_e
 ```
 
+```{r question3_b}
+o_vs_e0 <- ggplot(olive, aes(x=oleic, y = eicosenoic, color = as.factor(Region)))+
+  geom_point()
+
+o_vs_e0
+```
+
 
 ```{r discretization}
 olive$linoleic2 <- cut_interval(olive$linoleic, n=3)
@@ -72,5 +80,23 @@ o_vs_e2 <- ggplot(olive, aes(x=oleic, y=eicosenoic)) +
   geom_point(aes(color=Region, size=palmitoleic2, shape=palmitic2))
 
 o_vs_e2
+```
+
+```{r question6}
+plot_ly(data = olive, labels=~Area, type = 'pie', showlegend = F) %>%
+  layout(title = 'Proportion of Oils from different regions',
+        xaxis = list(showgrid = F, zeroline = F, showticklables = F),
+         yaxis = list(showgrid = F, zeroline = F, showticklables = F))
+
+```
+
+```{r question7}
+
+```
+
+### Assignment 2: Multidimensional Scaling of a high-dimensional object
+
+```{r}
+baseball <- read.csv("baseball-2016.csv", sep = ",", header = TRUE)
 ```
 

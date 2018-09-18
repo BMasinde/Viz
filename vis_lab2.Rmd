@@ -20,7 +20,7 @@ olive <- read.csv("olive.csv", sep = ",", header = TRUE)
 library(ggplot2)
 library(plotly)
 library(MASS)
-library(reshape2)
+library(gridExtra)
 ```
 
 ```{r question1_a}
@@ -151,7 +151,7 @@ coordsMDS2 <- cbind(baseball[ , 1:2], coordsMDS)
 plot_ly(coordsMDS2, x= ~V1, y = ~V2, type ="scatter", hovertext = ~ Team,
             color = ~League, colors = c("#0444BF","#F46A4E"))
 ```
-
+There appears to be a difference between the two leagues; most of the NL league teams are on the second and third quadrant (negative V2) while most of the AL league teams are on the first and fourth quadrant (positive V2). The y-axis "V2" has the best differentation between the leagues. The Boston Red Sox, Atlanta Braves and Philadelphia Philies appear to be outliers.
 ```{r}
 # get MDS variable V2 and cbind with points from isoMDS
 d4 <- cbind(baseball[ ,1:2], coords[,2], baseball2[,])
@@ -160,8 +160,50 @@ d4 <- cbind(baseball[ ,1:2], coords[,2], baseball2[,])
 colnames(d4)[3] <- c("V2")
 ```
 
+```{r fxn1, echo=FALSE, eval=FALSE}
+# Consulted Naveen Gabriel for the function to produce successive scatter plots
+
+myplot=list()
+
+p <- function(dataset){
+  j<-1
+  for (i in 4:ncol(dataset) ){
+    print(i)
+    myplot[[j]] <- ggplot(dataset, aes_string(colnames(dataset)[3], colnames(dataset)[i],color="League"))+
+      geom_point()
+    
+    j<-j+1
+    
+  }
+  
+  grid.arrange(grobs=myplot)
+  # return(myplot)
+}
+
+p(d4)
+```
 
 
+```{r fxn2}
+# function to successively get plots of V2 vs other variables
+myplot <-function(df, y_string){
+  ggplot(df, aes_string(x = "V2", y = y_string, color = "League"))+
+    geom_point()+
+    geom_vline(xintercept = 0, color = "black")+
+    geom_hline(yintercept = 0, color = "black")
+}
+```
 
+```{r}
+# Variables that seem to have strongest postive relationship
+# HR per game:
+myplot(d4, "HR.per.game")
+```
 
+```{r}
+# HR
+myplot(d4, "X3B")
+```
+
+Per the plot, HR per game and HR have the same scatter points. The two have strongest positve connection to V2 while X3B has the strongest negative connection to V2.
 

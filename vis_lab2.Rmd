@@ -20,6 +20,7 @@ olive <- read.csv("olive.csv", sep = ",", header = TRUE)
 library(ggplot2)
 library(plotly)
 library(MASS)
+library(reshape2)
 ```
 
 ```{r question1_a}
@@ -158,6 +159,9 @@ d4 <- cbind(baseball[ ,1:2], coords[,2], baseball2[,])
 # rename col3 to V2
 colnames(d4)[3] <- c("V2")
 ```
+
+
+
 
 
 

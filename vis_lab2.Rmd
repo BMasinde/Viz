@@ -151,3 +151,13 @@ plot_ly(coordsMDS2, x= ~V1, y = ~V2, type ="scatter", hovertext = ~ Team,
             color = ~League, colors = c("#0444BF","#F46A4E"))
 ```
 
+```{r}
+# get MDS variable V2 and cbind with points from isoMDS
+d4 <- cbind(baseball[ ,1:2], coords[,2], baseball2[,])
+
+# rename col3 to V2
+colnames(d4)[3] <- c("V2")
+```
+
+
+

@@ -16,7 +16,7 @@ fontsize: 11pt
 olive <- read.csv("olive.csv", sep = ",", header = TRUE)
 ```
 
-```{r libraries}
+```{r libraries, message=FALSE, warning=FALSE, paged.print=FALSE}
 library(ggplot2)
 library(plotly)
 ```
@@ -91,7 +91,11 @@ plot_ly(data = olive, labels=~Area, type = 'pie', showlegend = F) %>%
 ```
 
 ```{r question7}
-
+l_vs_e <- ggplot(olive, aes(x = linoleic, y = eicosenoic)) +
+  geom_point() + 
+  geom_density_2d()#+
+  #stat_density_2d(aes(fill = stat(level)), geom = "polygon")
+l_vs_e  
 ```
 
 ### Assignment 2: Multidimensional Scaling of a high-dimensional object
@@ -111,4 +115,5 @@ summary(baseball$HR.per.game)
 ```{r}
 baseball <- read.csv("baseball-2016.csv", sep = ",", header = TRUE)
 ```
+
 

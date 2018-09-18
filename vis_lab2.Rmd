@@ -19,6 +19,7 @@ olive <- read.csv("olive.csv", sep = ",", header = TRUE)
 ```{r libraries, message=FALSE, warning=FALSE, paged.print=FALSE}
 library(ggplot2)
 library(plotly)
+library(MASS)
 ```
 
 ```{r question1_a}
@@ -100,20 +101,53 @@ l_vs_e
 
 ### Assignment 2: Multidimensional Scaling of a high-dimensional object
 
+```{r}
+# reading the data
+baseball <- read.csv("baseball-2016.csv", sep = ",", header = TRUE)
+```
+
 #### Question1
 The xlsx file is converted to a csv file, makes it easier to load the data without extra packages. It is reasonable to scale the data because they have different ranges so that features with large scales do not dominate. Example, comparing maximum value and minimum value for "AB" and "Home runs per game". The two are on totally different scales.
 
 ```{r}
+# summary of AB
 summary(baseball$AB)
 ```
 
 ```{r}
+#summary of HR
 summary(baseball$HR.per.game)
 ```
 
+#### Question 2
 
 ```{r}
-baseball <- read.csv("baseball-2016.csv", sep = ",", header = TRUE)
+# scale the 26 numeric columns
+baseball2 <- scale(baseball[ ,3:ncol(baseball)])
 ```
 
+```{r}
+# Getting distance between points using Minkowski
+mink_d <- dist(baseball2, method = "minkowski", p =2)
+```
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+# get 2 column vector with fitted configuration 
+resid <- isoMDS(mink_d, k=2 )
+
+# getting the coordinates
+coords <- resid$points
+
+# convert coords to dataframe
+coordsMDS <- as.data.frame(coords)
+
+# cbind to get column Team and League
+coordsMDS2 <- cbind(baseball[ , 1:2], coordsMDS)
+```
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+# plot the new dimension and color by  League
+plot_ly(coordsMDS2, x= ~V1, y = ~V2, type ="scatter", hovertext = ~ Team,
+            color = ~League, colors = c("#0444BF","#F46A4E"))
+```
 

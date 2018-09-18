@@ -96,6 +96,18 @@ plot_ly(data = olive, labels=~Area, type = 'pie', showlegend = F) %>%
 
 ### Assignment 2: Multidimensional Scaling of a high-dimensional object
 
+#### Question1
+The xlsx file is converted to a csv file, makes it easier to load the data without extra packages. It is reasonable to scale the data because they have different ranges so that features with large scales do not dominate. Example, comparing maximum value and minimum value for "AB" and "Home runs per game". The two are on totally different scales.
+
+```{r}
+summary(baseball$AB)
+```
+
+```{r}
+summary(baseball$HR.per.game)
+```
+
+
 ```{r}
 baseball <- read.csv("baseball-2016.csv", sep = ",", header = TRUE)
 ```

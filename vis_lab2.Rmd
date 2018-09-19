@@ -43,12 +43,27 @@ p_vs_o2 <- ggplot(olive, aes(x=oleic, y=palmitic, color = linolenic2)) +
 p_vs_o2
 ```
 
-```{r question 2, warning=FALSE}
-p_vs_o3 <- ggplot(olive, aes(palmitic, oleic)) +
-  geom_point(aes(color=linolenic2, size=linolenic2)) +
-  geom_spoke(aes(angle=as.numeric(linolenic2),radius=as.numeric(linolenic2)))
+```{r question 2_a, warning=FALSE}
+pal_vs_ole_col <- ggplot(olive, aes(palmitic, oleic)) +
+  geom_point(aes(color=linolenic2))
 
-p_vs_o3
+pal_vs_ole_col
+```
+
+
+```{r question 2_b, warning = FALSE}
+pal_vs_ole_size <- ggplot(olive, aes(palmitic, oleic)) +
+  geom_point(aes(size=linolenic2))
+
+pal_vs_ole_size
+```
+
+```{r question 2_c, warning=FALSE}
+pal_vs_ole_angle <- ggplot(olive, aes(palmitic, oleic)) +
+  geom_point() +
+  geom_spoke(aes(angle=as.numeric(linolenic2),radius=45))
+
+pal_vs_ole_angle
 ```
 
 ```{r Question3}

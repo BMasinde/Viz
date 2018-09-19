@@ -135,6 +135,12 @@ summary(baseball$AB)
 summary(baseball$HR.per.game)
 ```
 
+The density plot below graphically explains why scaling is needed. Appropriate density should be similar to log normal density.
+```{r base_density}
+plot(density(as.matrix(baseball[3:ncol(baseball)])))
+```
+
+
 #### Question 2
 
 ```{r}

@@ -172,15 +172,19 @@ coordsMDS2 <- cbind(baseball[ , 1:2], coordsMDS)
 plot_ly(coordsMDS2, x= ~V1, y = ~V2, type ="scatter", hovertext = ~ Team,
             color = ~League, colors = c("#0444BF","#F46A4E"))
 ```
+
 There appears to be a difference between the two leagues; most of the NL league teams are on the second and third quadrant (negative V2) while most of the AL league teams are on the first and fourth quadrant (positive V2). The y-axis "V2" has the best differentation between the leagues. The Boston Red Sox, Atlanta Braves and Philadelphia Philies appear to be outliers.
 
 ```{r question3_2}
 # Shepard diagrams assess the goodness-of-fit of MDS techniques
-# run shep on points from isoMDS and using same distance calculated in previous step
+# run shep on points from isoMDS and using same distance as calculated in previous step
 shep <- Shepard(mink_d, coords)
-
 ```
 
+```{r}
+# convert the distance to numeric
+delta 
+```
 
 
 

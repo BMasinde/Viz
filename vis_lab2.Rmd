@@ -61,7 +61,7 @@ pal_vs_ole_size
 ```{r question 2_c, warning=FALSE}
 pal_vs_ole_angle <- ggplot(olive, aes(palmitic, oleic)) +
   geom_point() +
-  geom_spoke(aes(angle=as.numeric(linolenic2),radius=45))
+  geom_spoke(aes(angle=as.numeric(linolenic2),radius=20))
 
 pal_vs_ole_angle
 ```
@@ -186,13 +186,46 @@ shep <- Shepard(mink_d, coords)
 
 ```{r}
 # convert the distance to numeric
-delta 
+delta <- as.numeric(mink_d)
 ```
 
 
+```{r}
+# All the coords in one column
+D <- as.numeric(dist(coords))
+```
 
+```{r}
+# create a square matrix with dimensions from the rows of coords
+# n as rows 
+n = nrow(coords)
 
+# index as empyt matrix
+index <- matrix(1:n, nrow = n, ncol = n)
 
+# get index of the lower triangle of the index matrix and convert it to numeric
+index1 <- as.numeric(index[lower.tri(index)])
+
+```
+
+```{r}
+# same procedur
+n = nrow(coords)
+
+index <- matrix(1:n, nrow=n, ncol=n, byrow = T)
+
+index2 <- as.numeric(index[lower.tri(index)])
+```
+
+```{r}
+# plotly
+plot_ly()%>%
+  add_markers(x=~delta, y=~D, hoverinfo = 'text',
+        text = ~paste('Obj1: ', rownames(baseball)[index1],
+                      '<br> Obj 2: ', rownames(baseball)[index2])) #%>%
+  #if nonmetric MDS inolved
+  #add_lines(x=~sh$x, y=~sh$yf)
+```
 
 
 ```{r question4_2}

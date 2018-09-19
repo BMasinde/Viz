@@ -17,12 +17,23 @@ p_o2 <- ggplot(olive, aes(x=olive$oleic, y=olive$palmitic, color = olive$linolen
 
 p_o2
 
-palmetic_vs_oleic <- ggplot(olive, aes(palmitic, oleic)) +
-  geom_point(aes(color=linolenic2, size=linolenic2)) +
-  geom_spoke(aes(angle=as.numeric(linolenic2),radius=as.numeric(linolenic2)))
+#ques 2
+pal_vs_ole_col <- ggplot(olive, aes(palmitic, oleic)) +
+  geom_point(aes(color=linolenic2))
 
-palmetic_vs_oleic
+pal_vs_ole_col
 
+pal_vs_ole_size <- ggplot(olive, aes(palmitic, oleic)) +
+  geom_point(aes(size=linolenic2))
+pal_vs_ole_size
+
+pal_vs_ole_angle <- ggplot(olive, aes(palmitic, oleic)) +
+  geom_point() +
+  geom_spoke(aes(angle=as.numeric(linolenic2),radius=25))
+
+pal_vs_ole_angle
+
+#ques 3
 oleic_vs_eicosenoic <- ggplot(olive, aes(x=olive$oleic, y=olive$eicosenoic, color = olive$Region)) + 
   geom_point()
 oleic_vs_eicosenoic

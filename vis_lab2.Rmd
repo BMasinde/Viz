@@ -126,13 +126,16 @@ baseball <- read.csv("baseball-2016.csv", sep = ",", header = TRUE)
 The xlsx file is converted to a csv file, makes it easier to load the data without extra packages. It is reasonable to scale the data because they have different ranges so that features with large scales do not dominate. Example, comparing maximum value and minimum value for "AB" and "Home runs per game". The two are on totally different scales.
 
 ```{r}
-# summary of AB
-summary(baseball$AB)
+# range of AB
+range1 <- max(baseball$AB) -  min(baseball$AB)
+range1
 ```
 
 ```{r}
-#summary of HR
-summary(baseball$HR.per.game)
+# range of HR per game
+range2 <- max(baseball$HR.per.game) - min(baseball$HR.per.game)
+
+range2
 ```
 
 The density plot below graphically explains why scaling is needed. Appropriate density should be similar to log normal density.

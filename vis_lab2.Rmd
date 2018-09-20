@@ -295,6 +295,7 @@ plot_ly()%>%
   add_lines(x=~shep$x, y=~shep$yf) %>%
   layout(title = "Shepard's plot")
 ```
+This plot well shows the quality of MDS fit using observed dissimilarity and ordination distance. The non-metric fit is R^2=0.975
 
 #### Question 4
 

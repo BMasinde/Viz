@@ -9,6 +9,7 @@ output:
     theme: journal
   pdf_document: default
 fontsize: 11pt
+bibliography: references.bib
 ---
 
 ### Assignment 1. Perception Visualization
@@ -25,7 +26,7 @@ library(gridExtra)
 ```
 
 #### Question 1.
-```{r question1_a}
+```{r question1_a, echo=FALSE}
 p_vs_o <- ggplot(olive, aes(x=oleic, y=palmitic,
                      color = linolenic)) +
   geom_point() +
@@ -41,7 +42,7 @@ olive$linolenic2 <- cut_interval(olive$linolenic, n=4)
 
 The plots demonstrate the preattentive perception problem. With the first plot it is not easy to make out boundaries while in the second plot one can easily perceive boundaries.
 
-```{r question1_b}
+```{r question1_b, echo=FALSE}
 p_vs_o2 <- ggplot(olive, aes(x=oleic, y=palmitic, color = linolenic2)) + 
   geom_point() +
   ggtitle("Dependence of Palmitic on Oleic colored by discretized Linolenic") +
@@ -54,7 +55,7 @@ p_vs_o2
 #### Question 2.
 It is more difficult to differentiate between the categories using angle compared to using color and size. The spoke diagram requires a combination of line length (2.8 bits) and line orientation (3 bits) which is more than size (2.2 bits) and color brightness (2.1 bits)
 
-```{r question 2_a, warning=FALSE}
+```{r question 2_a, warning=FALSE, echo=FALSE}
 pal_vs_ole_col <- ggplot(olive, aes(oleic, palmitic)) +
   geom_point(aes(color=linolenic2))+
   ggtitle("Oleic vs Palmitic colored by Discretized Linolenic") +
@@ -64,7 +65,7 @@ pal_vs_ole_col
 ```
 
 
-```{r question 2_b, warning = FALSE}
+```{r question 2_b, warning = FALSE, echo=FALSE}
 pal_vs_ole_size <- ggplot(olive, aes(oleic, palmitic)) +
   geom_point(aes(size=linolenic2)) +
   ggtitle("Oleic vs Palmitic sized by Discretized Linolenic") +
@@ -105,6 +106,8 @@ o_vs_e0
 
 #### Question 4
 
+This is an attentive perception problem. It is quite difficult to process information and judge the boundaries on the three groups. One has to analyse color shape and size and position on the X and Y axis at the same time.
+ 
 ```{r discretization, echo=FALSE}
 olive$linoleic2 <- cut_interval(olive$linoleic, n=3)
 olive$palmitic2 <- cut_interval(olive$palmitic, n=3)
@@ -120,6 +123,11 @@ o_vs_e1 <- ggplot(olive, aes(x=eicosenoic, y= oleic)) +
 o_vs_e1
 ```
 
+#### Question 5.
+The color dominates every other aesthetic hence it makes it easier to notice the boundaries despite shape and size. Treisman's theory [@treisman] on visual analysis "search for the presence of a visual primitive is automatic and
+parallel, whereas search for the absence of the same feature is serial and requires focused
+attention". 
+
 ```{r question5, warning=FALSE}
 o_vs_e2 <- ggplot(olive, aes(x=oleic, y=eicosenoic)) + 
   geom_point(aes(color=Region, size=palmitoleic2, shape=palmitic2))
@@ -127,25 +135,45 @@ o_vs_e2 <- ggplot(olive, aes(x=oleic, y=eicosenoic)) +
 o_vs_e2
 ```
 
-```{r question6}
-plot_ly(data = olive, labels=~Area, type = 'pie', showlegend = F) %>%
+#### Question 6.
+
+Without labels on the individual sections, the different areas appear to have the same proportions. This demonstrates the relative judgement problem.
+```{r question6, echo=FALSE}
+plot_ly(data = olive, labels=~Area, type = 'pie', showlegend = TRUE, textinfo = "text", text = "") %>%
   layout(title = 'Proportion of Oils from different regions',
         xaxis = list(showgrid = F, zeroline = F, showticklables = F),
          yaxis = list(showgrid = F, zeroline = F, showticklables = F))
 
 ```
 
+
+#### Question 7.
+
+The contour plot shows that there are observations in areas where in actual scatter plot there aren't any. The contour plot shows that there are five distinct density areas (two sparsely dense and three highly dense).
+
 ```{r question7}
-l_vs_e <- ggplot(olive, aes(x = linoleic, y = eicosenoic)) +
-  geom_point() + 
-  geom_density_2d()#+
-  #stat_density_2d(aes(fill = stat(level)), geom = "polygon")
+l_vs_e <- ggplot(olive, aes(x = eicosenoic, y = linoleic)) +
+  geom_density_2d()+
+  theme_minimal() +
+  ggtitle("Contour plot of linoleic vs eicosenoic")
+  
 l_vs_e  
 ```
 
+
+```{r question7_b, echo=FALSE}
+l_vs_e1 <- ggplot(olive, aes(x=eicosenoic, y = linoleic))+
+  geom_point() +
+  ggtitle("linoleic vs Eicosenoic Scatter plot ") +
+  theme_minimal()
+
+l_vs_e1
+```
+
+
 ### Assignment 2: Multidimensional Scaling of a high-dimensional object
 
-```{r}
+```{r base_data, echo= FALSE}
 # reading the data
 baseball <- read.csv("baseball-2016.csv", sep = ",", header = TRUE)
 ```
@@ -153,13 +181,13 @@ baseball <- read.csv("baseball-2016.csv", sep = ",", header = TRUE)
 #### Question1
 The xlsx file is converted to a csv file, makes it easier to load the data without extra packages. It is reasonable to scale the data because they have different ranges so that features with large scales do not dominate. Example, comparing maximum value and minimum value for "AB" and "Home runs per game". The two are on totally different scales.
 
-```{r}
+```{r range_ab}
 # range of AB
 range1 <- max(baseball$AB) -  min(baseball$AB)
 range1
 ```
 
-```{r}
+```{r range_hrpg}
 # range of HR per game
 range2 <- max(baseball$HR.per.game) - min(baseball$HR.per.game)
 
@@ -167,24 +195,25 @@ range2
 ```
 
 The density plot below graphically explains why scaling is needed. Appropriate density should be similar to log normal density.
+
 ```{r base_density}
-plot(density(as.matrix(baseball[3:ncol(baseball)])))
+plot(density(as.matrix(baseball[3:ncol(baseball)])), main = "Density of baseball numeric variables ")
 ```
 
 
 #### Question 2
 
-```{r}
+```{r scale, echo=FALSE}
 # scale the 26 numeric columns
 baseball2 <- scale(baseball[ ,3:ncol(baseball)])
 ```
 
-```{r}
+```{r mink}
 # Getting distance between points using Minkowski
 mink_d <- dist(baseball2, method = "minkowski", p =2)
 ```
 
-```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+```{r isoMDS, message=FALSE, warning=FALSE, paged.print=FALSE}
 # get 2 column vector with fitted configuration 
 resid <- isoMDS(mink_d, k=2 )
 
@@ -198,13 +227,13 @@ coordsMDS <- as.data.frame(coords)
 coordsMDS2 <- cbind(baseball[ , 1:2], coordsMDS)
 ```
 
-```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+```{r var, echo = FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 # plot the new dimension and color by  League
 plot_ly(coordsMDS2, x= ~V1, y = ~V2, type ="scatter", hovertext = ~ Team,
             color = ~League, colors = c("#0444BF","#F46A4E"))
 ```
 
-There appears to be a difference between the two leagues; most of the NL league teams are on the second and third quadrant (negative V2) while most of the AL league teams are on the first and fourth quadrant (positive V2). The y-axis "V2" has the best differentation between the leagues. The Boston Red Sox, Atlanta Braves and Philadelphia Philies appear to be outliers.
+There appears to be a difference between the two leagues; most of the NL league teams are on the second and third quadrant (negative V2) while most of the AL league teams are on the first and fourth quadrant (positive V2). The y-axis "V2" has the best differentiation between the leagues. The Boston Red Sox, Atlanta Braves and Philadelphia Philies appear to be outliers. The AL teams are closely clustered together compared to the NL teams.
 
 ```{r question3_2}
 # Shepard diagrams assess the goodness-of-fit of MDS techniques
@@ -212,18 +241,18 @@ There appears to be a difference between the two leagues; most of the NL league 
 shep <- Shepard(mink_d, coords)
 ```
 
-```{r}
+```{r num_mink, echo=FALSE}
 # convert the distance to numeric
 delta <- as.numeric(mink_d)
 ```
 
 
-```{r}
+```{r num_d_coords, echo=FALSE}
 # All the coords in one column
 D <- as.numeric(dist(coords))
 ```
 
-```{r}
+```{r index1, echo=FALSE}
 # create a square matrix with dimensions from the rows of coords
 # n as rows 
 n = nrow(coords)
@@ -236,7 +265,7 @@ index1 <- as.numeric(index[lower.tri(index)])
 
 ```
 
-```{r}
+```{r index2, echo=FALSE}
 # same procedur
 n = nrow(coords)
 
@@ -245,7 +274,7 @@ index <- matrix(1:n, nrow=n, ncol=n, byrow = T)
 index2 <- as.numeric(index[lower.tri(index)])
 ```
 
-```{r}
+```{r rownames, echo=FALSE}
 # i dont want to edit original data
 baseball3 <- baseball
 
@@ -253,18 +282,19 @@ rownames(baseball3) <-baseball3[ ,1]
 
 ```
 
-```{r}
+```{r plot_s}
 # plotly
 plot_ly()%>%
   add_markers(x=~delta, y=~D, hoverinfo = 'text',
         text = ~paste('Obj1: ', rownames(baseball3)[index1],
                       '<br> Obj2: ', rownames(baseball3)[index2])) %>%
   #if nonmetric MDS inolved
-  add_lines(x=~shep$x, y=~shep$yf)
+  add_lines(x=~shep$x, y=~shep$yf) %>%
+  layout(title = "Shepard's plot")
 ```
 
 
-```{r question4_2}
+```{r question4_2, echo=FALSE}
 # get MDS variable V2 and cbind with points from isoMDS
 d4 <- cbind(baseball[ ,1:2], coords[,2], baseball2[,])
 
@@ -272,31 +302,8 @@ d4 <- cbind(baseball[ ,1:2], coords[,2], baseball2[,])
 colnames(d4)[3] <- c("V2")
 ```
 
-```{r fxn1, echo=FALSE, eval=FALSE}
-# Consulted Naveen Gabriel for the function to produce successive scatter plots
 
-myplot=list()
-
-p <- function(dataset){
-  j<-1
-  for (i in 4:ncol(dataset) ){
-    print(i)
-    myplot[[j]] <- ggplot(dataset, aes_string(colnames(dataset)[3], colnames(dataset)[i],color="League"))+
-      geom_point()
-    
-    j<-j+1
-    
-  }
-  
-  grid.arrange(grobs=myplot)
-  # return(myplot)
-}
-
-p(d4)
-```
-
-
-```{r fxn2}
+```{r fxn2, echo=FALSE}
 # function to successively get plots of V2 vs other variables
 myplot <-function(df, y_string){
   ggplot(df, aes_string(x = "V2", y = y_string, color = "League"))+
@@ -306,16 +313,24 @@ myplot <-function(df, y_string){
 }
 ```
 
-```{r}
+```{r hrpg}
 # Variables that seem to have strongest postive relationship
 # HR per game:
 myplot(d4, "HR.per.game")
 ```
 
-```{r}
-# HR
+```{r x3b}
+# X3B
 myplot(d4, "X3B")
 ```
 
-Per the plot, HR per game and HR have the same scatter points. The two have strongest positve connection to V2 while X3B has the strongest negative connection to V2.
+Per the plot, HR per game and HR have the same scatter points. The two have strongest positive connection to V2 while X3B has the strongest negative connection to V2.
+
+### Appendix
+
+```{r ref.label=knitr::all_labels(), echo = T, eval = F}
+
+```
+
+### References
 

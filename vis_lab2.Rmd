@@ -3,31 +3,35 @@ title: "Visualization Lab 2"
 author: "Roshni Sundaramurthy (rossu809); Brian Masinde (brima748)"
 date: "17 September 2018"
 output:
-  html_notebook:
-    theme: journal
   html_document:
     df_print: paged
+  html_notebook:
+    theme: journal
+  pdf_document: default
 fontsize: 11pt
 ---
 
 ### Assignment 1. Perception Visualization
 
-```{r data}
+```{r data, echo = FALSE}
 olive <- read.csv("olive.csv", sep = ",", header = TRUE)
 ```
 
-```{r libraries, message=FALSE, warning=FALSE, paged.print=FALSE}
+```{r libraries, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
 library(ggplot2)
 library(plotly)
 library(MASS)
 library(gridExtra)
 ```
 
+#### Question 1.
 ```{r question1_a}
 p_vs_o <- ggplot(olive, aes(x=oleic, y=palmitic,
                      color = linolenic)) +
-  geom_point() 
-  #xlab("")
+  geom_point() +
+  ggtitle("Dependence of Palmitic on Oleic colored by numeric Linolenic") +
+  theme_minimal()
+  
 p_vs_o
 ```
 
@@ -35,60 +39,84 @@ p_vs_o
 olive$linolenic2 <- cut_interval(olive$linolenic, n=4)
 ```
 
+The plots demonstrate the preattentive perception problem. With the first plot it is not easy to make out boundaries while in the second plot one can easily perceive boundaries.
 
 ```{r question1_b}
 p_vs_o2 <- ggplot(olive, aes(x=oleic, y=palmitic, color = linolenic2)) + 
-  geom_point()
+  geom_point() +
+  ggtitle("Dependence of Palmitic on Oleic colored by discretized Linolenic") +
+  theme_minimal()
+  #scale_fill_manual(name = "Discrete Linolenic")
 
 p_vs_o2
 ```
 
+#### Question 2.
+It is more difficult to differentiate between the categories using angle compared to using color and size. The spoke diagram requires a combination of line length (2.8 bits) and line orientation (3 bits) which is more than size (2.2 bits) and color brightness (2.1 bits)
+
 ```{r question 2_a, warning=FALSE}
-pal_vs_ole_col <- ggplot(olive, aes(palmitic, oleic)) +
-  geom_point(aes(color=linolenic2))
+pal_vs_ole_col <- ggplot(olive, aes(oleic, palmitic)) +
+  geom_point(aes(color=linolenic2))+
+  ggtitle("Oleic vs Palmitic colored by Discretized Linolenic") +
+  theme_minimal()
 
 pal_vs_ole_col
 ```
 
 
 ```{r question 2_b, warning = FALSE}
-pal_vs_ole_size <- ggplot(olive, aes(palmitic, oleic)) +
-  geom_point(aes(size=linolenic2))
+pal_vs_ole_size <- ggplot(olive, aes(oleic, palmitic)) +
+  geom_point(aes(size=linolenic2)) +
+  ggtitle("Oleic vs Palmitic sized by Discretized Linolenic") +
+  theme_minimal()
 
 pal_vs_ole_size
 ```
 
 ```{r question 2_c, warning=FALSE}
-pal_vs_ole_angle <- ggplot(olive, aes(palmitic, oleic)) +
+pal_vs_ole_angle <- ggplot(olive, aes(oleic, palmitic)) +
   geom_point() +
-  geom_spoke(aes(angle=as.numeric(linolenic2),radius=20))
+  geom_spoke(aes(angle=as.numeric(linolenic2),radius= 35)) +
+  ggtitle("Palmitic vs Oleic angle by Linolenic") +
+  theme_minimal()
 
 pal_vs_ole_angle
 ```
 
-```{r Question3}
-o_vs_e <- ggplot(olive, aes(x=oleic, y=eicosenoic, color = Region)) + 
-  geom_point()
+#### Question 3. 
+For the first plot it is difficult to judge boundaries because the color takes a continuous scale, it requires more attention to differentiate the color scales (attentive). For the second graph with region as factors it is quick to judge boundaries hence preattentive.
+
+```{r Question3, echo=FALSE}
+o_vs_e <- ggplot(olive, aes(x= eicosenoic, y = oleic, color = Region)) + 
+  geom_point() +
+  ggtitle(" Oleic vs Eicosenoic colored by Region") +
+  theme_minimal()
 o_vs_e
 ```
 
-```{r question3_b}
-o_vs_e0 <- ggplot(olive, aes(x=oleic, y = eicosenoic, color = as.factor(Region)))+
-  geom_point()
+```{r question3_b, echo=FALSE}
+o_vs_e0 <- ggplot(olive, aes(x=eicosenoic, y = oleic , color = as.factor(Region)))+
+  geom_point() +
+  ggtitle("Oleic vs Eicosenoic colored by factored Region") +
+  theme_minimal()
 
 o_vs_e0
 ```
 
+#### Question 4
 
-```{r discretization}
+```{r discretization, echo=FALSE}
 olive$linoleic2 <- cut_interval(olive$linoleic, n=3)
 olive$palmitic2 <- cut_interval(olive$palmitic, n=3)
 olive$palmitoleic2 <- cut_interval(olive$palmitoleic, n=3)
 ```
 
 ```{r question4, warning=FALSE}
-o_vs_e1 <- ggplot(olive, aes(x=oleic, y=eicosenoic)) + 
-  geom_point(aes(color=linoleic2, size=palmitoleic2, shape=palmitic2))
+o_vs_e1 <- ggplot(olive, aes(x=eicosenoic, y= oleic)) + 
+  geom_point(aes(color=linoleic2, size=palmitoleic2, shape=palmitic2)) +
+  ggtitle("Oleic vs Eicosenoic")+
+  theme_minimal()
+
 o_vs_e1
 ```
 

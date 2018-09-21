@@ -1,0 +1,41 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+---
+```{r libararies, message=FALSE, warning=FALSE}
+library(dplyr)
+library(plotly)
+```
+
+```{r}
+aegypti <- read.csv("aegypti_albopictus.csv", header = TRUE, sep = ",")
+```
+
+```{r}
+# filtering
+yr04 <- aegypti %>%
+  select(VECTOR, Y, X, COUNTRY, YEAR) %>%
+  filter(YEAR == 2004)
+```
+
+```{r Question1_}
+yr04_p <- yr04 %>%
+ plot_mapbox(x= ~X, y =~Y, split =~VECTOR, mode = "scattermapbox", hoverinfo = 'name') %>%
+  layout(title = 'Scatter',
+         font = list(color='white'),
+         plot_bgcolor = '#191A1A', paper_bgcolor = '#191A1A',
+         mapbox = list(style = 'light'),
+         legend = list(orientation = 'h',
+                       font = list(size = 8)),
+         margin = list(l = 25, r = 25,
+                       b = 25, t = 25,
+                       pad = 2))
+
+yr04_p
+```
+
+
+
+

@@ -18,9 +18,13 @@ aegypti <- read.csv("aegypti_albopictus.csv", header = TRUE, sep = ",")
 yr04 <- aegypti %>%
   select(VECTOR, Y, X, COUNTRY, YEAR) %>%
   filter(YEAR == 2004)
+
+yr13 <- aegypti %>%
+  select(VECTOR, Y, X, COUNTRY, YEAR) %>%
+  filter(YEAR == 2013)
 ```
 
-```{r Question1_}
+```{r Question1_a}
 yr04_p <- yr04 %>%
  plot_mapbox(x= ~X, y =~Y, split =~VECTOR, mode = "scattermapbox", hoverinfo = 'name') %>%
   layout(title = 'Scatter',
@@ -37,5 +41,48 @@ yr04_p
 ```
 
 
+```{r question1_b}
+yr13_p <- yr13 %>%
+ plot_mapbox(x= ~X, y =~Y, split =~VECTOR, mode = "scattermapbox", hoverinfo = 'name') %>%
+  layout(title = 'Scatter',
+         font = list(color='white'),
+         plot_bgcolor = '#191A1A', paper_bgcolor = '#191A1A',
+         mapbox = list(style = 'light'),
+         legend = list(orientation = 'h',
+                       font = list(size = 8)),
+         margin = list(l = 25, r = 25,
+                       b = 25, t = 25,
+                       pad = 2))
+
+yr13_p
+```
+
+
+```{r summary2}
+Z <- aegypti %>%
+  group_by(COUNTRY) %>%
+  mutate(z = n())
+
+```
+
+
+
+```{r}
+# WORLD MAP
+g <- list(
+  projection = list(type = 'Mercator')
+)
+```
+
+
+```{r}
+z %>% 
+  plot_geo()%>%
+  add_trace(
+    z = ~Z, y = ~Y, x =~X, color = ~z
+  )
+
+
+```
 
 

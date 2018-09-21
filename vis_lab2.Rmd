@@ -25,7 +25,7 @@ library(MASS)
 library(gridExtra)
 ```
 
-#### Question 1.
+#### Question 1
 ```{r question1_a, echo=FALSE}
 p_vs_o <- ggplot(olive, aes(x=oleic, y=palmitic,
                      color = linolenic)) +
@@ -52,7 +52,7 @@ p_vs_o2 <- ggplot(olive, aes(x=oleic, y=palmitic, color = linolenic2)) +
 p_vs_o2
 ```
 
-#### Question 2.
+#### Question 2
 It is more difficult to differentiate between the categories using angle compared to using color and size. The spoke diagram requires a combination of line length (2.8 bits) and line orientation (3 bits) which is more than size (2.2 bits) and color brightness (2.1 bits)
 
 ```{r question 2_a, warning=FALSE, echo=FALSE}
@@ -84,7 +84,7 @@ pal_vs_ole_angle <- ggplot(olive, aes(oleic, palmitic)) +
 pal_vs_ole_angle
 ```
 
-#### Question 3. 
+#### Question 3 
 For the first plot it is difficult to judge boundaries because the color takes a continuous scale, it requires more attention to differentiate the color scales (attentive). For the second graph with region as factors it is quick to judge boundaries hence preattentive.
 
 ```{r Question3, echo=FALSE}
@@ -123,7 +123,7 @@ o_vs_e1 <- ggplot(olive, aes(x=eicosenoic, y= oleic)) +
 o_vs_e1
 ```
 
-#### Question 5.
+#### Question 5
 The color dominates every other aesthetic hence it makes it easier to notice the boundaries despite shape and size. Treisman's theory [@treisman] on visual analysis "search for the presence of a visual primitive is automatic and
 parallel, whereas search for the absence of the same feature is serial and requires focused
 attention". 
@@ -135,7 +135,7 @@ o_vs_e2 <- ggplot(olive, aes(x=oleic, y=eicosenoic)) +
 o_vs_e2
 ```
 
-#### Question 6.
+#### Question 6
 
 Without labels on the individual sections, the different areas appear to have the same proportions. This demonstrates the relative judgement problem.
 ```{r question6, echo=FALSE}
@@ -147,7 +147,7 @@ plot_ly(data = olive, labels=~Area, type = 'pie', showlegend = TRUE, textinfo = 
 ```
 
 
-#### Question 7.
+#### Question 7
 
 The contour plot shows that there are observations in areas where in actual scatter plot there aren't any. The contour plot shows that there are five distinct density areas (two sparsely dense and three highly dense).
 
@@ -178,7 +178,7 @@ l_vs_e1
 baseball <- read.csv("baseball-2016.csv", sep = ",", header = TRUE)
 ```
 
-#### Question1
+#### Question 1
 The xlsx file is converted to a csv file, makes it easier to load the data without extra packages. It is reasonable to scale the data because they have different ranges so that features with large scales do not dominate. Example, comparing maximum value and minimum value for "AB" and "Home runs per game". The two are on totally different scales.
 
 ```{r range_ab}
@@ -234,6 +234,9 @@ plot_ly(coordsMDS2, x= ~V1, y = ~V2, type ="scatter", hovertext = ~ Team,
 ```
 
 There appears to be a difference between the two leagues; most of the NL league teams are on the second and third quadrant (negative V2) while most of the AL league teams are on the first and fourth quadrant (positive V2). The y-axis "V2" has the best differentiation between the leagues. The Boston Red Sox, Atlanta Braves and Philadelphia Philies appear to be outliers. The AL teams are closely clustered together compared to the NL teams.
+
+
+#### Question 3
 
 ```{r question3_2}
 # Shepard diagrams assess the goodness-of-fit of MDS techniques
@@ -292,7 +295,9 @@ plot_ly()%>%
   add_lines(x=~shep$x, y=~shep$yf) %>%
   layout(title = "Shepard's plot")
 ```
+This plot well shows the quality of MDS fit using observed dissimilarity and ordination distance. The non-metric fit is R^2=0.975
 
+#### Question 4
 
 ```{r question4_2, echo=FALSE}
 # get MDS variable V2 and cbind with points from isoMDS

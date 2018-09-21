@@ -1,0 +1,13 @@
+---
+title: "Visualization Lab 2"
+author: "Roshni Sundaramurthy (rossu809); Brian Masinde (brima748)"
+date: "17 September 2018"
+output:
+  html_document:
+    df_print: paged
+  html_notebook:
+    theme: journal
+  pdf_document: default
+fontsize: 11pt
+bibliography: references.bib
+---

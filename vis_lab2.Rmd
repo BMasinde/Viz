@@ -333,4 +333,3 @@ Per the plot, HR per game and HR have the same scatter points. The two have stro
 ```
 
 ### References
-

@@ -95,7 +95,33 @@ aegypti %>%
   ) %>%
   layout(
     title = "Number of mosquitos detected per country",
-    geo = list(projection = list(type = "conic"))
+    geo = list(projection = list(type = "conic equal area"))
   )
+```
+
+
+```{r question4}
+d <- aegypti %>%
+  select(VECTOR, Y, X, YEAR, COUNTRY) %>%
+  filter(YEAR == 2013., COUNTRY == "Brazil") %>%
+  mutate(X1 = cut_interval(X, 100)) %>%
+  mutate(Y1 = cut_interval(Y, 100)) %>%
+  group_by(X1) %>%
+  mutate(mx = mean(X)) %>%
+  mutate(nx = n()) %>%
+  group_by(Y1) %>%
+  mutate(my = mean(Y)) %>%
+  mutate(ny = n()) %>%
+  mutate(N = ny + nx)
+  
+```
+
+```{r question4b}
+d %>%
+  plot_mapbox(x = ~mx, y = ~my, split = ~VECTOR, mode = "scattermapbox", hoverinfo = "name") %>%
+  layout( title = "Scatter plot of mosquitos 2013",
+        mapbox = list(style = "light"),
+        margin = list(r = 25, l = 25, b = 25, t = 25, pad = 0.5)
+        )
 ```
 

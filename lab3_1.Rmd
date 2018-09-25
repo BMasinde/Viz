@@ -10,79 +10,92 @@ library(plotly)
 ```
 
 ```{r}
+# Access key token
+Sys.setenv('MAPBOX_TOKEN' = 'pk.eyJ1IjoiYnJpbWEiLCJhIjoiY2ptYm5pbXZ6MDd1czNwcW10OHN4Y2theSJ9.SNmXpvkIL14Wn1ebhRr_ug')
+```
+
+
+```{r}
 aegypti <- read.csv("aegypti_albopictus.csv", header = TRUE, sep = ",")
 ```
 
-```{r}
-# filtering
-yr04 <- aegypti %>%
-  select(VECTOR, Y, X, COUNTRY, YEAR) %>%
-  filter(YEAR == 2004)
 
-yr13 <- aegypti %>%
-  select(VECTOR, Y, X, COUNTRY, YEAR) %>%
-  filter(YEAR == 2013)
-```
-
-```{r Question1_a}
-yr04_p <- yr04 %>%
- plot_mapbox(x= ~X, y =~Y, split =~VECTOR, mode = "scattermapbox", hoverinfo = 'name') %>%
-  layout(title = 'Scatter',
-         font = list(color='white'),
-         plot_bgcolor = '#191A1A', paper_bgcolor = '#191A1A',
-         mapbox = list(style = 'light'),
-         legend = list(orientation = 'h',
-                       font = list(size = 8)),
-         margin = list(l = 25, r = 25,
-                       b = 25, t = 25,
-                       pad = 2))
-
-yr04_p
+```{r question1_1}
+aegypti %>%
+  select(VECTOR, Y, X, YEAR, COUNTRY) %>%
+  filter(YEAR == 2004) %>%
+  plot_mapbox(x = ~X, y =~Y, split = ~VECTOR, mode = "scattermapbox", hoverinfo = "name" ) %>%
+  layout( title = "Scatter plot of mosquitos 2004",
+        mapbox = list(style = "light"),
+        margin = list(r = 25, l = 25, b = 25, t = 25, pad = 0.5)
+        )
 ```
 
 
-```{r question1_b}
-yr13_p <- yr13 %>%
- plot_mapbox(x= ~X, y =~Y, split =~VECTOR, mode = "scattermapbox", hoverinfo = 'name') %>%
-  layout(title = 'Scatter',
-         font = list(color='white'),
-         plot_bgcolor = '#191A1A', paper_bgcolor = '#191A1A',
-         mapbox = list(style = 'light'),
-         legend = list(orientation = 'h',
-                       font = list(size = 8)),
-         margin = list(l = 25, r = 25,
-                       b = 25, t = 25,
-                       pad = 2))
 
-yr13_p
+```{r question1_2}
+# 2013 scatter plot of mosquitos
+aegypti %>%
+  select(VECTOR, Y, X, YEAR, COUNTRY) %>%
+  filter(YEAR == 2013) %>%
+  plot_mapbox(x = ~X, y =~Y, split = ~VECTOR, mode = "scattermapbox", hoverinfo = "name" ) %>%
+  layout( title = "Scatter plot of mosquitos 2004",
+        mapbox = list(style = "light"),
+        margin = list(r = 25, l = 25, b = 25, t = 25, pad = 0.5)
+        )
 ```
 
 
-```{r summary2}
-Z <- aegypti %>%
+```{r question2}
+# compute z (no. of mosquitos detected per country); choropleth
+aegypti %>%
   group_by(COUNTRY) %>%
-  mutate(z = n())
-
-```
-
-
-
-```{r}
-# WORLD MAP
-g <- list(
-  projection = list(type = 'Mercator')
-)
-```
-
-
-```{r}
-z %>% 
-  plot_geo()%>%
+  mutate(Z = n()) %>%
+  plot_geo() %>%
   add_trace(
-    z = ~Z, y = ~Y, x =~X, color = ~z
+    z =~Z, name = 'Mosquito (Z)', color =~Z, color = "reds",
+    locations =~COUNTRY_ID
+  ) %>%
+  layout(
+    title = "Number of mosquitos detected per country",
+    geo = list(
+  projection = list(type = "equirectangular")
+    )
   )
 
-
 ```
 
+```{r Question3_a}
+
+aegypti %>%
+  group_by(COUNTRY) %>%
+  mutate(Z = log(n())) %>%
+  plot_geo() %>%
+  add_trace(
+    z =~Z, name = 'Mosquito (Z)', color =~Z, color = "reds",
+    locations =~COUNTRY_ID
+  ) %>%
+  layout(
+    title = "Number of mosquitos detected per country",
+    geo = list(
+  projection = list(type = "equirectangular")
+    )
+  )
+```
+
+
+```{r question3_b}
+aegypti %>%
+  group_by(COUNTRY) %>%
+  mutate(Z = log(n())) %>%
+  plot_geo() %>%
+  add_trace(
+    z =~Z, name = 'Mosquito (Z)', color =~Z, color = "reds",
+    locations =~COUNTRY_ID
+  ) %>%
+  layout(
+    title = "Number of mosquitos detected per country",
+    geo = list(projection = list(type = "conic"))
+  )
+```
 

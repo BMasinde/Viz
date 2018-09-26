@@ -20,7 +20,8 @@ Sys.setenv('MAPBOX_TOKEN' = 'pk.eyJ1IjoiYnJpbWEiLCJhIjoiY2ptYm5pbXZ6MDd1czNwcW10
 aegypti <- read.csv("aegypti_albopictus.csv", header = TRUE, sep = ",")
 ```
 
-The plots demonstrate the preattentive perception problem. At first glance we observe that there were no incidence of the *Aedes albopictus* species in Africa while higher occurence of the same is observed in North America.
+For the year 2004 the plots demonstrate the preattentive perception problem. At first glance we observe that there were no incidence of the *Aedes albopictus* species in Africa while higher occurence of the same is observed in North America (USA more than Mexico), Southern Europe (Spain, Italy and Croatia), and East Asia (Taiwan Japan). Regarding Taiwan, at first one would interpret the map as there being no  occurences of *Aedes aegypti*, but on further zooming one notices there was such observations. The occurences of *Aedes albopictus* in Europe cannot be stated as high density because there were only two observation areas in Spain and one in each Italy and Croatia.  In the USA the *Aedes albopictus* species has higher density in Mississipi state. *Aedes aegypti* has higher density in West Coast of Brazil and along the coast of Venezuela.
+
 ```{r question1_1}
 
 aegypti %>%
@@ -33,7 +34,7 @@ aegypti %>%
         )
 ```
 
-
+Between the plots of 2004 and 2013, there's a clear distinction. Brazil and East of South America in general appeared to have an outbreak of the *Aedes aegypti*, while Taiwan had an increase in spread of the *Aedes albopictus* towards the northern coast.
 
 ```{r question1_2}
 # 2013 scatter plot of mosquitos

@@ -15,16 +15,18 @@ Sys.setenv('MAPBOX_TOKEN' = 'pk.eyJ1IjoiYnJpbWEiLCJhIjoiY2ptYm5pbXZ6MDd1czNwcW10
 ```
 
 
-```{r}
+```{r data, echo=FALSE}
+# loading the data
 aegypti <- read.csv("aegypti_albopictus.csv", header = TRUE, sep = ",")
 ```
 
-
+The plots demonstrate the preattentive perception problem. At first glance we observe that there were no incidence of the *Aedes albopictus* species in Africa while higher occurence of the same is observed in North America.
 ```{r question1_1}
+
 aegypti %>%
-  select(VECTOR, Y, X, YEAR, COUNTRY) %>%
-  filter(YEAR == 2004) %>%
-  plot_mapbox(x = ~X, y =~Y, split = ~VECTOR, mode = "scattermapbox", hoverinfo = "name" ) %>%
+  select(VECTOR, Y, X, YEAR, COUNTRY) %>% # selecting variables
+  filter(YEAR == 2004) %>% # filter by year
+  plot_mapbox(x = ~X, y =~Y, split = ~VECTOR, mode = "scattermapbox", hoverinfo = "name" ) %>% # scattemapbox
   layout( title = "Scatter plot of mosquitos 2004",
         mapbox = list(style = "light"),
         margin = list(r = 25, l = 25, b = 25, t = 25, pad = 0.5)
@@ -112,13 +114,30 @@ d <- aegypti %>%
   group_by(Y1) %>%
   mutate(my = mean(Y)) %>%
   mutate(ny = n()) %>%
-  mutate(N = ny + nx)
+  mutate(N = ny + nx) %>%
+  group_by(X1, Y1) %>%
+  mutate(N2 = n()) %>%
+  group_by(X, Y) %>%
+  mutate(mean(X,Y))
   
 ```
 
+
+```{r}
+ d2 <- aegypti %>%
+ select(VECTOR, Y, X, YEAR, COUNTRY) %>%
+ filter(YEAR == 2013., COUNTRY == "Brazil") %>%
+ mutate(X1 = cut_interval(X, 100)) %>%
+ mutate(Y1 = cut_interval(Y, 100)) %>% 
+ group_by(X1,Y1) %>%
+  summarise(mx = mean(X), my =mean(Y), N = n())
+```
+
+
 ```{r question4b}
-d %>%
-  plot_mapbox(x = ~mx, y = ~my, split = ~VECTOR, mode = "scattermapbox", hoverinfo = "name") %>%
+d2 %>%
+  plot_mapbox( mode = "scattermapbox", hoverinfo = "name") %>%
+  add_markers(x = ~mx, y = ~my, split =~N,size = ~N) %>%
   layout( title = "Scatter plot of mosquitos 2013",
         mapbox = list(style = "light"),
         margin = list(r = 25, l = 25, b = 25, t = 25, pad = 0.5)

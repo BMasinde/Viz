@@ -1,7 +1,7 @@
 ---
-title: "Visualization Lab 2"
-author: "Roshni Sundaramurthy (rossu809); Brian Masinde (brima748)"
-date: "17 September 2018"
+title: "Visualization Lab 3"
+author: "Roshni Sundaramurthy (rossu809) & Brian Masinde (brima748)"
+date: "26 September 2018"
 output:
   html_document:
     df_print: paged
@@ -11,3 +11,236 @@ output:
 fontsize: 11pt
 bibliography: references.bib
 ---
+
+
+```{r libraries, echo=FALSE, message=FALSE, warning=FALSE, paged.print=FALSE}
+library(ggplot2)
+library(plotly)
+library(MASS)
+library(gridExtra)
+library(sp)
+library(sf)
+library(tidyr)
+library(dplyr)
+library(RColorBrewer)
+library(akima)
+```
+
+## Assignment 1: Visualization of mosquito’s populations
+```{r access, echo=FALSE}
+# Access key token
+Sys.setenv('MAPBOX_TOKEN' = 'pk.eyJ1IjoiYnJpbWEiLCJhIjoiY2ptYm5pbXZ6MDd1czNwcW10OHN4Y2theSJ9.SNmXpvkIL14Wn1ebhRr_ug')
+```
+
+```{r data, echo=FALSE}
+# loading the data
+aegypti <- read.csv("aegypti_albopictus.csv", header = TRUE, sep = ",")
+```
+
+### 1.1
+
+For the year 2004 the plots demonstrate the preattentive perception problem. At first glance we observe that there were no incidence of the *Aedes albopictus* species in Africa while higher occurrence of the same is observed in North America (USA more than Mexico), Southern Europe (Spain, Italy and Croatia), and East Asia (Taiwan Japan). Regarding Taiwan, at first one would interpret the map as there being no  occurrences of *Aedes aegypti*, but on further zooming one notices there was such observations. The occurrences of *Aedes albopictus* in Europe cannot be stated as high density because there were only two observation areas in Spain and one in each Italy and Croatia.  In the USA the *Aedes albopictus* species has higher density in Mississippi state. *Aedes aegypti* has higher density in West Coast of Brazil and along the coast of Venezuela.
+
+```{r question1_1, fig.width=10}
+
+aegypti %>%
+  select(VECTOR, Y, X, YEAR, COUNTRY) %>% # selecting variables
+  filter(YEAR == 2004) %>% # filter by year
+  plot_mapbox(x = ~X, y =~Y, split = ~VECTOR, mode = "scattermapbox", hoverinfo = "name" ) %>% # scattemapbox
+  layout( title = "Scatter plot of mosquitos 2004",
+        mapbox = list(style = "light"),
+        margin = list(r = 25, l = 25, b = 25, t = 25, pad = 0),
+        legend = list(orientation = "h", font = list(size = 8))
+        )
+```
+
+Between the plots of 2004 and 2013, there's a clear distinction. Brazil and East of South America in general appeared to have an infestation of the *Aedes aegypti*, while Taiwan had an increase in spread of the *Aedes albopictus* towards the northern coast. North America seemed to have gotten rid of the *Aedes albopictus*. We hypothesize that researchers were more keen on Brazil because of the Zika virus epidemic, therefore it does not necessarily mean that other areas were able to eradicate the mosquito.
+
+```{r question1_2, fig.width=10}
+# 2013 scatter plot of mosquitos
+aegypti %>%
+  select(VECTOR, Y, X, YEAR, COUNTRY) %>%
+  filter(YEAR == 2013) %>%
+  plot_mapbox(x = ~X, y =~Y, split = ~VECTOR, mode = "scattermapbox", hoverinfo = "name" ) %>%
+  layout( title = "Scatter plot of mosquitos 2004",
+        mapbox = list(style = "light"),
+        margin = list(r = 25, l = 25, b = 25, t = 25, pad = 0.5),
+        legend = list(orientation = "h", font = list(size = 8))
+        )
+```
+
+### 1.2
+
+There is little information on the map because of the continuous scale on the big range between the observations. For example, India has Z value of 583 while Canada has Z value of 1 yet they have the same color shading.
+
+```{r question2, fig.width=10}
+# compute z (no. of mosquitos detected per country); choropleth
+aegypti %>%
+  group_by(COUNTRY) %>%
+  mutate(Z = n()) %>%
+  plot_geo() %>%
+  add_trace(
+    z =~Z, name = 'Mosquito (Z)', color =~Z, color = "reds",
+    locations =~COUNTRY_ID
+  ) %>%
+  layout(
+    title = "Number of mosquitos detected per country",
+    geo = list(
+  projection = list(type = "equirectangular")
+    )
+  )
+
+```
+
+### 1.3
+
+With the Z value scaled we get a clear comparison of the number of mosquito detected in each country. Brazil has the highest number followed by USA. East Africa, most of the countries in West Africa, China, India, are in-between the ranges of 6 and 4. 
+
+```{r Question3_a, fig.width=10}
+
+aegypti %>%
+  group_by(COUNTRY) %>%
+  mutate(Z = log(n())) %>%
+  plot_geo() %>%
+  add_trace(
+    z =~Z, name = 'Mosquito (Z)', color =~Z, color = "reds",
+    locations =~COUNTRY_ID
+  ) %>%
+  layout(
+    title = "Number of mosquitos detected per country (graph a)",
+    geo = list(
+  projection = list(type = "equirectangular")
+    )
+  )
+```
+
+Comparing graph a and b; while graph b is fancier and nice to look at it is not easy to judge compared to graph a. The disadvantage of graph a is that further north or south of equator continents appear larger than they actually are [@heremaps]. For the conic in graph b shapes and distances are not correct.
+
+```{r question3_b, fig.width=10}
+aegypti %>%
+  group_by(COUNTRY) %>%
+  mutate(Z = log(n())) %>%
+  plot_geo() %>%
+  add_trace(
+    z =~Z, name = 'Mosquito (Z)', color =~Z, color = "reds",
+    locations =~COUNTRY_ID
+  ) %>%
+  layout(
+    title = "Number of mosquitos detected per country (graph b)",
+    geo = list(projection = list(type = "conic equal area"))
+  )
+```
+
+### 1.4
+
+The discretization carried out helps in getting accurate information from the map. Areas that had high distribution of mosquito in Brazil were in the states of Paraiba (16 and 15), Rio Grande Do Norte (12 and 14), Sau Paulo (13).
+
+
+```{r question4, fig.width=10}
+aegypti %>%
+ select(VECTOR, Y, X, YEAR, COUNTRY) %>%
+ filter(YEAR == 2013., COUNTRY == "Brazil") %>%
+ mutate(X1 = cut_interval(X, 100)) %>%
+ mutate(Y1 = cut_interval(Y, 100)) %>% 
+ group_by(X1,Y1) %>%
+ summarise(mx = mean(X), my =mean(Y), N = n()) %>%
+ plot_mapbox( mode = "scattermapbox", hoverinfo = "name") %>%
+ add_markers(x = ~mx, y = ~my, split =~N,size = ~N) %>%
+ layout( title = "Scatter plot of mosquitos 2013",
+        mapbox = list(style = "light"),
+        margin = list(r = 25, l = 25, b = 25, t = 25, pad = 0.5),
+        legend = list(orientation = "h", font=list(size = 8))
+        )
+```
+
+
+## Assignment 2: Visualization of income in Swedish household
+
+```{r reading data into R, echo = FALSE}
+map<-readRDS("swe_map.rds")
+df<-read.csv("mean_income.csv")
+#View(df)
+```
+
+### 2.1 Age groups as Young, Adult and Senior
+```{r Groups (Young,Adult,Senior)}
+levels(df$age) <- c("Young", "Adult", "Senior")
+df1 <- spread(df, age, X2016)
+colnames(df1) <- c("Region","Young","Adult","Senior")
+```
+
+### 2.2 Violin plot showing mean income distributions per age group
+
+Mean values:
+Young = 310.20 ; Adult = 502.02 ; Senior = 524.09
+The wider part of the violin plot shows higher probability. This indicates that the mean income of young,adult, and senior is highly concentrated around the median. The mean income of young is lower than both adult and senior incomes.
+
+```{r Violin plot}
+p <- ggplot(df, aes(age,X2016,fill=age))+labs(title="Plot of mean income distributions by age",x="Age", y = "Mean income distributions")+ geom_violin(trim = FALSE)+stat_summary(fun.y=median, geom="point", shape=23, size=2, color="#1c1c19")+scale_fill_brewer(palette="Dark2")
+ggplotly(p)
+```
+
+### 2.3 Surface plot showing dependence of Senior incomes on Adult and Young incomes in various counties.
+
+The trend is monotonically increasing and this also suggests an additive model. A linear regression model is an additive model hence it can be used to model the data. Furthermore, the dependent variable Senior incomes is continuous.
+
+```{r Surface plot}
+#df1 %>%plot_ly(x=~Young, y=~Adult, z=~Senior, type="scatter3d")
+library(akima)
+attach(df1)
+s=interp(Adult,Senior,Young)
+detach(df1)
+
+df1 %>%
+  plot_ly(x=~s$x, y=~s$y, z=~s$z, name='') %>% layout(title = "Surface plot",
+    scene = list(
+      xaxis = list(title = "Adult"),
+      yaxis = list(title = "Senior"),
+      zaxis = list(title = "Young")
+    )) %>% add_surface()
+```
+
+```{r Separation, echo=FALSE}
+df1 <- df1 %>% separate(Region,c("Num","Region","County"),extra = 'drop') %>% select('Region','Young','Adult','Senior')
+
+df1[df1$Region=="Örebro",][1]="Orebro"
+df1[df1$Region=="Västra",][1]="Västra Götaland"
+#View(df1)
+```
+
+### 2.4 Choropleth maps for Young and Adult
+
+From the maps, we can associate mean incomes to regions Sweden. Mean income of the young is high in Stockholm. Halland has the second highest mean income while Värmland and Västerbotten have lowest mean income. Considering mean incomes of the adult, again Stockholm has the highest value. But only Värmland has the lowest mean income for adults. 
+
+```{r plotly, message=FALSE, warning=FALSE, paged.print=FALSE}
+rownames(df1)=df1$Region
+map$Young=df1[map$NAME_1, "Young"]
+map$Young[is.na(map$Young)]=0
+Young_plot <- plot_ly() %>% add_sf(data=map, split=~NAME_1, color=~Young, showlegend=F, alpha=1) %>%
+              layout(title="Incomes of Young")
+Young_plot
+
+map$Adult=df1[map$NAME_1, "Adult"]
+map$Adult[is.na(map$Adult)]=0
+Adult_plot <- plot_ly() %>% add_sf(data=map, split=~NAME_1, color=~Adult, showlegend=F, alpha=1) %>% layout(title="Incomes of Adult")
+              
+Adult_plot
+```
+
+### 2.5 Locate Linköping
+```{r Where we are located, message=FALSE, warning=FALSE, paged.print=FALSE}
+long <- 15.624525
+lat <- 58.409814
+
+Young_plot %>% add_trace(x = ~long, y = ~lat, mode='markers', color="#8B0000",hoverinfo<-"text", text="Linköping") %>% layout(title="Linköping")
+```
+
+This red dot shows where we are located :)
+
+## Appendix
+
+```{r ref.label=knitr::all_labels(), echo = T, eval = F}
+
+```
+
+## References

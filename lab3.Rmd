@@ -25,7 +25,7 @@ library(dplyr)
 library(RColorBrewer)
 ```
 
-## Assignment 1: Visualization of mosquitos populations
+## Assignment 1: Visualization of mosquitoes populations
 ```{r access, echo=FALSE}
 # Access key token
 Sys.setenv('MAPBOX_TOKEN' = 'pk.eyJ1IjoiYnJpbWEiLCJhIjoiY2ptYm5pbXZ6MDd1czNwcW10OHN4Y2theSJ9.SNmXpvkIL14Wn1ebhRr_ug')
@@ -46,34 +46,34 @@ aegypti %>%
   select(VECTOR, Y, X, YEAR, COUNTRY) %>% # selecting variables
   filter(YEAR == 2004) %>% # filter by year
   plot_mapbox(x = ~X, y =~Y, split = ~VECTOR, mode = "scattermapbox", hoverinfo = "name" ) %>% # scattemapbox
-  layout( title = "Scatter plot of mosquitos 2004",
+  layout( title = "Scatter plot of mosquitoes 2004",
         mapbox = list(style = "light"),
         margin = list(r = 25, l = 25, b = 25, t = 25, pad = 0),
         legend = list(orientation = "h", font = list(size = 8))
         )
 ```
 
-Between the plots of 2004 and 2013, there's a clear distinction. Brazil and East of South America in general appeared to have an infestation of the *Aedes aegypti*, while Taiwan had an increase in spread of the *Aedes albopictus* towards the northern coast. North America seemed to have gotten rid of the *Aedes albopictus*. We hypothesize that researchers were more keen on Brazil because of the Zika virus epidemic, therefore it does not necessarily mean that other areas were able to eradicate the mosquito.
+Between the plots of 2004 and 2013, there's a clear distinction. Brazil and East of South America in general appeared to have an infestation of the *Aedes aegypti*, while Taiwan had an increase in spread of the *Aedes albopictus* towards the northern coast. North America seemed to have gotten rid of the *Aedes albopictus*. We hypothesize that researchers were more keen on Brazil because of the Zika virus epidemic, therefore it does not necessarily mean that other areas were able to eradicate the mosquitoes.
 
 ```{r question1_2, fig.width=10}
-# 2013 scatter plot of mosquitos
+# 2013 scatter plot of mosquitoes
 aegypti %>%
   select(VECTOR, Y, X, YEAR, COUNTRY) %>%
   filter(YEAR == 2013) %>%
   plot_mapbox(x = ~X, y =~Y, split = ~VECTOR, mode = "scattermapbox", hoverinfo = "name" ) %>%
-  layout( title = "Scatter plot of mosquitos 2004",
+  layout( title = "Scatter plot of mosquitoes 2004",
         mapbox = list(style = "light"),
         margin = list(r = 25, l = 25, b = 25, t = 25, pad = 0.5),
         legend = list(orientation = "h", font = list(size = 8))
         )
 ```
 
-### 1.2 Choropleth map showing number of mosquitos per country 
+### 1.2 Choropleth map showing number of mosquitoes per country 
 
 There is little information on the map because of the continuous scale on the big range between the observations. For example, India has Z value of 583 while Canada has Z value of 1 yet they have the same color shading.
 
 ```{r question2, fig.width=10}
-# compute z (no. of mosquitos detected per country); choropleth
+# compute z (no. of mosquitoes detected per country); choropleth
 aegypti %>%
   group_by(COUNTRY) %>%
   mutate(Z = n()) %>%
@@ -83,7 +83,7 @@ aegypti %>%
     locations =~COUNTRY_ID
   ) %>%
   layout(
-    title = "Number of mosquitos detected per country",
+    title = "Number of mosquitoes detected per country",
     geo = list(
   projection = list(type = "equirectangular")
     )
@@ -93,7 +93,7 @@ aegypti %>%
 
 ### 1.3 Choropleth maps with equirectangular and conical projection
 
-With the Z value scaled we get a clear comparison of the number of mosquito detected in each country. Brazil has the highest number followed by USA. East Africa, most of the countries in West Africa, China, India, are in-between the ranges of 6 and 4. 
+With the Z value scaled we get a clear comparison of the number of mosquitoes detected in each country. Brazil has the highest number followed by USA. East Africa, most of the countries in West Africa, China, India, are in-between the ranges of 6 and 4. 
 
 ```{r Question3_a, fig.width=10}
 
@@ -106,7 +106,7 @@ aegypti %>%
     locations =~COUNTRY_ID
   ) %>%
   layout(
-    title = "Number of mosquitos detected per country (graph a)",
+    title = "Number of mosquitoes detected per country (graph a)",
     geo = list(
   projection = list(type = "equirectangular")
     )
@@ -125,14 +125,14 @@ aegypti %>%
     locations =~COUNTRY_ID
   ) %>%
   layout(
-    title = "Number of mosquitos detected per country (graph b)",
+    title = "Number of mosquitoes detected per country (graph b)",
     geo = list(projection = list(type = "conic equal area"))
   )
 ```
 
 ### 1.4 Brazil (2013)
 
-The discretization carried out helps in getting accurate information from the map. Areas that had high distribution of mosquito in Brazil were in the states of Paraiba (16 and 15), Rio Grande Do Norte (12 and 14), Sau Paulo (13).
+The discretization carried out helps in getting accurate information from the map. Areas that had high distribution of mosquitoes in Brazil were in the states of Paraiba (16 and 15), Rio Grande Do Norte (12 and 14), Sau Paulo (13).
 
 
 ```{r question4, fig.width=10}
@@ -145,7 +145,7 @@ aegypti %>%
  summarise(mx = mean(X), my =mean(Y), N = n()) %>%
  plot_mapbox( mode = "scattermapbox", hoverinfo = "name") %>%
  add_markers(x = ~mx, y = ~my, split =~N,size = ~N) %>%
- layout( title = "Scatter plot of mosquitos 2013",
+ layout( title = "Scatter plot of mosquitoes 2013",
         mapbox = list(style = "light"),
         margin = list(r = 25, l = 25, b = 25, t = 25, pad = 0.5),
         legend = list(orientation = "h", font=list(size = 8))
@@ -201,8 +201,8 @@ df1 %>%
 ```{r Separation, echo=FALSE}
 df1 <- df1 %>% separate(Region,c("Num","Region","County"),extra = 'drop') %>% select('Region','Young','Adult','Senior')
 
-df1[df1$Region=="Örebro",][1]="Orebro"
-df1[df1$Region=="Västra",][1]="Västra Götaland"
+df1[df1$Region=="Ã–rebro",][1]="Orebro"
+df1[df1$Region=="VÃ¤stra",][1]="VÃ¤stra GÃ¶taland"
 #View(df1)
 ```
 
@@ -225,12 +225,12 @@ Adult_plot <- plot_ly() %>% add_sf(data=map, split=~NAME_1, color=~Adult, showle
 Adult_plot
 ```
 
-### 2.5 Locate Linköping
-```{r Locate Linköping, message=FALSE, warning=FALSE, paged.print=FALSE}
+### 2.5 Locate LinkÃ¶ping
+```{r Locate LinkÃ¶ping, message=FALSE, warning=FALSE, paged.print=FALSE}
 long <- 15.624525
 lat <- 58.409814
 
-Young_plot %>% add_trace(x = ~long, y = ~lat, mode='markers', color="#8B0000",hoverinfo<-"text", text="Linköping") %>% layout(title="Linköping")
+Young_plot %>% add_trace(x = ~long, y = ~lat, mode='markers', color="#8B0000",hoverinfo<-"text", text="LinkÃ¶ping") %>% layout(title="LinkÃ¶ping")
 ```
 
 This red dot shows where we are located :)

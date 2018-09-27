@@ -1,0 +1,148 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+bibliography: references.bib
+---
+```{r libararies, message=FALSE, warning=FALSE}
+library(dplyr)
+library(plotly)
+```
+
+```{r}
+# Access key token
+Sys.setenv('MAPBOX_TOKEN' = 'pk.eyJ1IjoiYnJpbWEiLCJhIjoiY2ptYm5pbXZ6MDd1czNwcW10OHN4Y2theSJ9.SNmXpvkIL14Wn1ebhRr_ug')
+```
+
+
+```{r data, echo=FALSE}
+# loading the data
+aegypti <- read.csv("aegypti_albopictus.csv", header = TRUE, sep = ",")
+```
+
+### Question 1.
+For the year 2004 the plots demonstrate the preattentive perception problem. At first glance we observe that there were no incidence of the *Aedes albopictus* species in Africa while higher occurence of the same is observed in North America (USA more than Mexico), Southern Europe (Spain, Italy and Croatia), and East Asia (Taiwan Japan). Regarding Taiwan, at first one would interpret the map as there being no  occurences of *Aedes aegypti*, but on further zooming one notices there was such observations. The occurences of *Aedes albopictus* in Europe cannot be stated as high density because there were only two observation areas in Spain and one in each Italy and Croatia.  In the USA the *Aedes albopictus* species has higher density in Mississipi state. *Aedes aegypti* has higher density in West Coast of Brazil and along the coast of Venezuela.
+
+```{r question1_1, fig.width=8}
+
+aegypti %>%
+  select(VECTOR, Y, X, YEAR, COUNTRY) %>% # selecting variables
+  filter(YEAR == 2004) %>% # filter by year
+  plot_mapbox(x = ~X, y =~Y, split = ~VECTOR, mode = "scattermapbox", hoverinfo = "name" ) %>% # scattemapbox
+  layout( title = "Scatter plot of mosquitos 2004",
+        mapbox = list(style = "light"),
+        margin = list(r = 25, l = 35, b = 25, t = 25, pad = 0.5),
+        legend = list(orientation = "h", font = list(size = 8))
+        )
+```
+
+Between the plots of 2004 and 2013, there's a clear distinction. Brazil and East of South America in general appeared to have an infestation of the *Aedes aegypti*, while Taiwan had an increase in spread of the *Aedes albopictus* towards the northern coast. North America seemed to have gotten rid of the *Aedes albopictus*. We hypothesize that researchers were more keen on Brazil because of the Zika virus epidemic, therefore it does not necessarily mean that other areas were able to eradicate the mosquitos.
+
+```{r question1_2}
+# 2013 scatter plot of mosquitos
+aegypti %>%
+  select(VECTOR, Y, X, YEAR, COUNTRY) %>%
+  filter(YEAR == 2013) %>%
+  plot_mapbox(x = ~X, y =~Y, split = ~VECTOR, mode = "scattermapbox", hoverinfo = "name" ) %>%
+  layout( title = "Scatter plot of mosquitos 2004",
+        mapbox = list(style = "light"),
+        margin = list(r = 25, l = 25, b = 25, t = 25, pad = 0.5),
+        legend = list(orientation = "h", font = list(size = 8))
+        )
+```
+
+### Question 2.
+There is little information on the map because of the continuous scale on the big range between the observations. For example, India has Z value of 583 while Canada has Z value of 1 yet they have the same color shading.
+
+```{r question2}
+# compute z (no. of mosquitos detected per country); choropleth
+aegypti %>%
+  group_by(COUNTRY) %>%
+  mutate(Z = n()) %>%
+  plot_geo() %>%
+  add_trace(
+    z =~Z, name = 'Mosquito (Z)', color =~Z, color = "reds",
+    locations =~COUNTRY_ID
+  ) %>%
+  layout(
+    title = "Number of mosquitos detected per country",
+    geo = list(
+  projection = list(type = "equirectangular")
+    )
+  )
+
+```
+
+### Question 3.
+With the Z value scaled we get a clear comparison of the number of mosquitos detected in each country. Brazil has the highest number followed by USA. East Africa, most of the countries in West Africa, China, India, are in-between the ranges of 6 and 4. 
+
+```{r Question3_a}
+
+aegypti %>%
+  group_by(COUNTRY) %>%
+  mutate(Z = log(n())) %>%
+  plot_geo() %>%
+  add_trace(
+    z =~Z, name = 'Mosquito (Z)', color =~Z, color = "reds",
+    locations =~COUNTRY_ID
+  ) %>%
+  layout(
+    title = "Number of mosquitos detected per country (graph a)",
+    geo = list(
+  projection = list(type = "equirectangular")
+    )
+  )
+```
+
+Comparing graph a and b; while graph b is fancier and nice to look at it is not easy to interprate compared to graph a. The disadvantage of graph a is that further north or south of equator continents appear laerger than they actully are [@heremaps]. For the conic in graph b shapes and distances are not correct.
+
+```{r question3_b}
+aegypti %>%
+  group_by(COUNTRY) %>%
+  mutate(Z = log(n())) %>%
+  plot_geo() %>%
+  add_trace(
+    z =~Z, name = 'Mosquito (Z)', color =~Z, color = "reds",
+    locations =~COUNTRY_ID
+  ) %>%
+  layout(
+    title = "Number of mosquitos detected per country (graph b)",
+    geo = list(projection = list(type = "conic equal area"))
+  )
+```
+
+
+### Question 4.
+
+The discretization carried out helps in getting accurate information from the map. Areas that had high distirubion of mosquitos in Brazil were in the states of Paraiba (16 and 15), Rio Grande Do Norte (12 and 14), Sau Paulo (13).
+
+
+```{r}
+aegypti %>%
+ select(VECTOR, Y, X, YEAR, COUNTRY) %>%
+ filter(YEAR == 2013., COUNTRY == "Brazil") %>%
+ mutate(X1 = cut_interval(X, 100)) %>%
+ mutate(Y1 = cut_interval(Y, 100)) %>% 
+ group_by(X1,Y1) %>%
+ summarise(mx = mean(X), my =mean(Y), N = n()) %>%
+ plot_mapbox( mode = "scattermapbox", hoverinfo = "name") %>%
+ add_markers(x = ~mx, y = ~my, split =~N,size = ~N) %>%
+ layout( title = "Scatter plot of mosquitos 2013",
+        mapbox = list(style = "light"),
+        margin = list(r = 25, l = 25, b = 25, t = 25, pad = 0.5),
+        legend = list(orientation = "h", font=list(size = 8))
+        )
+```
+
+
+```{r question4b}
+#d2 %>%
+ # plot_mapbox( mode = "scattermapbox", hoverinfo = "name") %>%
+#  add_markers(x = ~mx, y = ~my, split =~N,size = ~N) %>%
+ # layout( title = "Scatter plot of mosquitos 2013",
+  #      mapbox = list(style = "light"),
+    #    margin = list(r = 25, l = 25, b = 25, t = 25, pad = 0.5)
+     #   )
+```
+

@@ -23,10 +23,9 @@ library(sf)
 library(tidyr)
 library(dplyr)
 library(RColorBrewer)
-library(akima)
 ```
 
-## Assignment 1: Visualization of mosquitoâ€™s populations
+## Assignment 1: Visualization of mosquitos populations
 ```{r access, echo=FALSE}
 # Access key token
 Sys.setenv('MAPBOX_TOKEN' = 'pk.eyJ1IjoiYnJpbWEiLCJhIjoiY2ptYm5pbXZ6MDd1czNwcW10OHN4Y2theSJ9.SNmXpvkIL14Wn1ebhRr_ug')
@@ -37,7 +36,7 @@ Sys.setenv('MAPBOX_TOKEN' = 'pk.eyJ1IjoiYnJpbWEiLCJhIjoiY2ptYm5pbXZ6MDd1czNwcW10
 aegypti <- read.csv("aegypti_albopictus.csv", header = TRUE, sep = ",")
 ```
 
-### 1.1
+### 1.1 Dot maps
 
 For the year 2004 the plots demonstrate the preattentive perception problem. At first glance we observe that there were no incidence of the *Aedes albopictus* species in Africa while higher occurrence of the same is observed in North America (USA more than Mexico), Southern Europe (Spain, Italy and Croatia), and East Asia (Taiwan Japan). Regarding Taiwan, at first one would interpret the map as there being no  occurrences of *Aedes aegypti*, but on further zooming one notices there was such observations. The occurrences of *Aedes albopictus* in Europe cannot be stated as high density because there were only two observation areas in Spain and one in each Italy and Croatia.  In the USA the *Aedes albopictus* species has higher density in Mississippi state. *Aedes aegypti* has higher density in West Coast of Brazil and along the coast of Venezuela.
 
@@ -69,7 +68,7 @@ aegypti %>%
         )
 ```
 
-### 1.2
+### 1.2 Choropleth map showing number of mosquitos per country 
 
 There is little information on the map because of the continuous scale on the big range between the observations. For example, India has Z value of 583 while Canada has Z value of 1 yet they have the same color shading.
 
@@ -92,7 +91,7 @@ aegypti %>%
 
 ```
 
-### 1.3
+### 1.3 Choropleth maps with equirectangular and conical projection
 
 With the Z value scaled we get a clear comparison of the number of mosquito detected in each country. Brazil has the highest number followed by USA. East Africa, most of the countries in West Africa, China, India, are in-between the ranges of 6 and 4. 
 
@@ -114,7 +113,7 @@ aegypti %>%
   )
 ```
 
-Comparing graph a and b; while graph b is fancier and nice to look at it is not easy to judge compared to graph a. The disadvantage of graph a is that further north or south of equator continents appear larger than they actually are [@heremaps]. For the conic in graph b shapes and distances are not correct.
+Comparing graph a and b; while graph b is fancier and nice to look at but it is not easy to judge when compared to graph a. The disadvantage of graph a is that further north or south of equator continents appear larger than they actually are [@heremaps]. For the conic in graph b shapes and distances are not correct.
 
 ```{r question3_b, fig.width=10}
 aegypti %>%
@@ -131,7 +130,7 @@ aegypti %>%
   )
 ```
 
-### 1.4
+### 1.4 Brazil (2013)
 
 The discretization carried out helps in getting accurate information from the map. Areas that had high distribution of mosquito in Brazil were in the states of Paraiba (16 and 15), Rio Grande Do Norte (12 and 14), Sau Paulo (13).
 
@@ -185,14 +184,13 @@ ggplotly(p)
 The trend is monotonically increasing and this also suggests an additive model. A linear regression model is an additive model hence it can be used to model the data. Furthermore, the dependent variable Senior incomes is continuous.
 
 ```{r Surface plot}
-#df1 %>%plot_ly(x=~Young, y=~Adult, z=~Senior, type="scatter3d")
 library(akima)
 attach(df1)
-s=interp(Adult,Senior,Young)
+interp_data=interp(Adult,Senior,Young)
 detach(df1)
 
 df1 %>%
-  plot_ly(x=~s$x, y=~s$y, z=~s$z, name='') %>% layout(title = "Surface plot",
+  plot_ly(x=~interp_data$x, y=~interp_data$y, z=~interp_data$z, name='') %>% layout(title = "Surface plot",
     scene = list(
       xaxis = list(title = "Adult"),
       yaxis = list(title = "Senior"),
@@ -203,8 +201,8 @@ df1 %>%
 ```{r Separation, echo=FALSE}
 df1 <- df1 %>% separate(Region,c("Num","Region","County"),extra = 'drop') %>% select('Region','Young','Adult','Senior')
 
-df1[df1$Region=="Ã–rebro",][1]="Orebro"
-df1[df1$Region=="VÃ¤stra",][1]="VÃ¤stra GÃ¶taland"
+df1[df1$Region=="Örebro",][1]="Orebro"
+df1[df1$Region=="Västra",][1]="Västra Götaland"
 #View(df1)
 ```
 
@@ -227,12 +225,12 @@ Adult_plot <- plot_ly() %>% add_sf(data=map, split=~NAME_1, color=~Adult, showle
 Adult_plot
 ```
 
-### 2.5 Locate LinkÃ¶ping
-```{r Where we are located, message=FALSE, warning=FALSE, paged.print=FALSE}
+### 2.5 Locate Linköping
+```{r Locate Linköping, message=FALSE, warning=FALSE, paged.print=FALSE}
 long <- 15.624525
 lat <- 58.409814
 
-Young_plot %>% add_trace(x = ~long, y = ~lat, mode='markers', color="#8B0000",hoverinfo<-"text", text="LinkÃ¶ping") %>% layout(title="LinkÃ¶ping")
+Young_plot %>% add_trace(x = ~long, y = ~lat, mode='markers', color="#8B0000",hoverinfo<-"text", text="Linköping") %>% layout(title="Linköping")
 ```
 
 This red dot shows where we are located :)
